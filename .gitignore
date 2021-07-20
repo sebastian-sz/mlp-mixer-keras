@@ -130,3 +130,7 @@ dmypy.json
 
 # IDE files
 .idea/
+
+# Weight files
+weights/original_weights/*.npz
+weights/*.h5
