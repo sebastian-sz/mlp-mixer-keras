@@ -106,7 +106,7 @@ def mlp_block(inputs, mlp_dim: int, dropout_rate: float = 0.2, name: str = ""):
     return x
 
 
-def MLPMixerB16():
+def MLPMixer_B16():
     """Build B16 MLP-Mixer model variant."""
     # TODO: keras-like params.
     return MLPMixer(
@@ -120,7 +120,7 @@ def MLPMixerB16():
     )
 
 
-def MLPMixerB32():
+def MLPMixer_B32():
     """Build B32 MLP-Mixer model variant."""
     # TODO: keras-like params.
     return MLPMixer(
@@ -134,7 +134,7 @@ def MLPMixerB32():
     )
 
 
-def MLPMixerL16():
+def MLPMixer_L16():
     """Build L16 MLP-Mixer model variant."""
     # TODO: keras-like params.
     return MLPMixer(
