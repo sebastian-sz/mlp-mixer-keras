@@ -17,3 +17,19 @@ jobs:
         run: |
           pip install pre-commit~=2.13
           make lint
+
+  test-output-consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.6'
+      - name: convert weights
+        run: |
+          pip install tensorflow-cpu==2.5.0
+          pip install -e .
+          bash scripts/download_all.sh
+          bash scripts/convert_all.sh
+          make test

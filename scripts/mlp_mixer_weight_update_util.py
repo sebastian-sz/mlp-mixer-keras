@@ -1,14 +1,9 @@
 """Utility to convert weights from JAX (.npz files) to Keras .h5."""
-
 from argparse import ArgumentParser
 
 import numpy as np
 
 from mlp_mixer.mlp_mixer import MLPMixer_B16, MLPMixer_B32, MLPMixer_L16
-
-# TODO: this code can be more optimised.
-# 1. do not make map and then reverse map. Create only reversed map.
-# 2. create dict from jax params, rather then start a for loop for each variable.
 
 
 def parse_args():
@@ -82,17 +77,6 @@ def make_weights_map(jax_names):
     return results
 
 
-def get_jax_var_by_name(jax_ckpt, name):
-    """Fetch jax variable from the checkpoint by it's name."""
-    # TODO: try with dictionary implementation.
-    for current_name in jax_ckpt:
-        if current_name == name:
-            return jax_ckpt[current_name]
-
-    print("Variable not found.")
-    return None
-
-
 def main():
     """Run weight conversion script for given model variant and JAX checkpoint."""
     args = parse_args()
@@ -100,24 +84,28 @@ def main():
 
     model = arg_to_model[args.model]()
 
-    jax_ckpt = np.load(args.input)
-    jax_names = jax_weight_names(jax_ckpt)
+    jax_variables = dict(np.load(args.input))
+    jax_names = list(jax_variables.keys())
 
-    weights_mapping = make_weights_map(jax_names)
-    reversed_weights_map = {y: x for (x, y) in weights_mapping.items()}
+    jax_to_keras_weights_mapping = make_weights_map(jax_names)
+    keras_to_jax_reversed_weights_map = {
+        y: x for (x, y) in jax_to_keras_weights_mapping.items()
+    }
 
     # Assign jax weights to keras model:
     for v in model.variables:
-        jax_name = reversed_weights_map[v.name]
-        jax_variable = get_jax_var_by_name(jax_ckpt, jax_name)
+        jax_name = keras_to_jax_reversed_weights_map[v.name]
+        jax_variable = jax_variables[jax_name]
 
         assert (
             v.shape == jax_variable.shape
         ), f"Shape mismatch for {v.name}. Keras {v.shape}, jax: {jax_variable.shape}"
-
         v.assign(jax_variable)
 
     model.save(filepath=args.output, save_format=".h5", include_optimizer=False)
+
+    print("OK. All variables matched.")
+    print(f"Converted weights saved at {args.output}")
 
 
 if __name__ == "__main__":
