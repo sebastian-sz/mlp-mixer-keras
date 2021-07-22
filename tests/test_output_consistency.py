@@ -69,7 +69,6 @@ class TestKerasVSOriginalOutputConsistency(parameterized.TestCase):
         input_tensor = self._pre_process_image(input_tensor)
 
         output = model(input_tensor, training=False)
-        output = tf.keras.layers.Softmax()(output)
 
         original_output = np.load(original_outputs)
 
