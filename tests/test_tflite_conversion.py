@@ -5,8 +5,12 @@ from typing import Callable
 import numpy as np
 import tensorflow as tf
 from absl.testing import absltest, parameterized
+from psutil import virtual_memory
 
 from tests.test_models import INPUT_SHAPE, TEST_PARAMS
+
+# Assure the machine has enough memory for the conversion. Not enough RAM will kill CI.
+VARIANT_TO_MIN_MEMORY = {"mlp-mixer-b16": 8, "mlp-mixer-b32": 8, "mlp-mixer-l16": 17}
 
 
 class TestTFLiteConversion(parameterized.TestCase):
@@ -20,6 +24,12 @@ class TestTFLiteConversion(parameterized.TestCase):
     @parameterized.named_parameters(TEST_PARAMS)
     def test_tflite_conversion(self, model_fn: Callable):
         model = model_fn(weights=None, input_shape=INPUT_SHAPE)
+
+        if not self._enough_memory_to_convert(model.name):
+            self.skipTest(
+                "Not enough memory to convert to tflite. Need at least "
+                f"{VARIANT_TO_MIN_MEMORY[model.name]} GB. Skipping... ."
+            )
 
         self._convert_and_save_tflite(model)
         self.assertTrue(os.path.isfile(self.tflite_path))
@@ -48,6 +58,12 @@ class TestTFLiteConversion(parameterized.TestCase):
         interpreter.invoke()
 
         return interpreter.get_tensor(output_details[0]["index"])
+
+    @staticmethod
+    def _enough_memory_to_convert(model_name: str) -> bool:
+        total_ram = virtual_memory().total / (1024.0 ** 3)
+        required_ram = VARIANT_TO_MIN_MEMORY[model_name]
+        return total_ram >= required_ram
 
 
 if __name__ == "__main__":

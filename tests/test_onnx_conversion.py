@@ -11,8 +11,7 @@ from psutil import virtual_memory
 
 from tests.test_models import INPUT_SHAPE, TEST_PARAMS
 
-# ONNX Conversion is very RAM hungry. We need to check if current machine has enough
-# memory, or the conversion will kill CI job.
+# Assure the machine has enough memory for the conversion. Not enough RAM will kill CI.
 VARIANT_TO_MIN_MEMORY = {"mlp-mixer-b16": 14, "mlp-mixer-b32": 15, "mlp-mixer-l16": 25}
 
 
