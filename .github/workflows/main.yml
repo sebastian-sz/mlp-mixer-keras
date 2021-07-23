@@ -18,6 +18,20 @@ jobs:
           pip install pre-commit~=2.13
           make lint
 
+  pip-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.6'
+      - name: Install
+        run: |
+          pip install git+https://github.com/sebastian-sz/mlp-mixer-keras@$GITHUB_HEAD_REF
+      - name: Import
+        run: python -c "from mlp_mixer import MLPMixer_B16"
+
   test-output-consistency:
     runs-on: ubuntu-latest
     steps:
