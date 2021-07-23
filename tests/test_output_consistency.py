@@ -54,15 +54,12 @@ class TestKerasVSOriginalOutputConsistency(parameterized.TestCase):
 
     @parameterized.named_parameters(CONSISTENCY_TEST_PARAMS)
     def test_output_consistency(
-        self,
-        model_fn: Callable[[], tf.keras.Model],
-        weights_path: str,
-        original_outputs: str,
+        self, model_fn: Callable, weights_path: str, original_outputs: str
     ):
         if not os.path.exists(weights_path):
             self.skipTest("No weights present in repo. Skipping... .")
 
-        model = model_fn()
+        model = model_fn(weight=None)
         model.load_weights(weights_path)
 
         input_tensor = tf.image.resize(self.image, INPUT_SHAPE)
