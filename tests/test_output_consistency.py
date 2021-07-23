@@ -59,7 +59,7 @@ class TestKerasVSOriginalOutputConsistency(parameterized.TestCase):
         if not os.path.exists(weights_path):
             self.skipTest("No weights present in repo. Skipping... .")
 
-        model = model_fn(weight=None)
+        model = model_fn(weights=None)
         model.load_weights(weights_path)
 
         input_tensor = tf.image.resize(self.image, INPUT_SHAPE)
