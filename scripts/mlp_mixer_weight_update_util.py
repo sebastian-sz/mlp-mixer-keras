@@ -12,6 +12,9 @@ def parse_args():
     parser.add_argument("--model", "-m", help="Model type to use")
     parser.add_argument("--input", "-i", help="Path to jax (.npz) checkpoint.")
     parser.add_argument("--output", "-o", help="Where to save .h5 converted weights.")
+    parser.add_argument(
+        "--notop", action="store_true", help="Whether to build model with head."
+    )
 
     return parser.parse_args()
 
@@ -82,7 +85,7 @@ def main():
     args = parse_args()
     arg_to_model = {"b16": MLPMixer_B16, "b32": MLPMixer_B32, "l16": MLPMixer_L16}
 
-    model = arg_to_model[args.model]()
+    model = arg_to_model[args.model](weights=None, include_top=not args.notop)
 
     jax_variables = dict(np.load(args.input))
     jax_names = list(jax_variables.keys())
