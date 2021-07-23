@@ -32,18 +32,22 @@ jobs:
       - name: Import
         run: python -c "from mlp_mixer import MLPMixer_B16"
 
-  test-output-consistency:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tensorflow-version: [ 2.2, 2.3, 2.4, 2.5 ]
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python
+      - name: Set up Python 3.6
         uses: actions/setup-python@v2
         with:
-          python-version: '3.6'
-      - name: convert weights
+          python-version: 3.6
+      - name: Install dependencies (TF version ${{ matrix.tensorflow-version }})
         run: |
-          pip install tensorflow-cpu==2.5.0
+          python -m pip install --upgrade pip
+          python -m pip install tensorflow~=${{matrix.tensorflow-version}}
+          pip install -r tests/requirements.txt
           pip install -e .
-          bash scripts/download_all.sh
-          bash scripts/convert_all.sh
-          make test
+      - name: Run tests
+        run: make test
