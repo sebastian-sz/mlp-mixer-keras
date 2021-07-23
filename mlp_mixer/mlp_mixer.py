@@ -8,6 +8,21 @@ from keras.utils import layer_utils
 from tensorflow.keras import backend
 from tensorflow.python.lib.io import file_io
 
+WEIGHTS_BASE_URL = (
+    "https://github.com/sebastian-sz/mlp-mixer-keras/releases/download/v1.0/"
+)
+
+WEIGHTS_HASHES = {
+    "mlp-mixer-b16.h5": "31670c261142ac63e160bcea14ad3929",
+    "mlp-mixer-b16_notop.h5": "b9de771862215884b0dc2a82757cac33",
+    "mlp-mixer-b16-sam.h5": "b9317283349bc699ca4f10db35a88df9",
+    "mlp-mixer-b16-sam_notop.h5": "73b16b7d1f77ff463717654973f0de9b",
+    "mlp-mixer-b32-sam.h5": "becfc6540f05833c3b01c19576d1c760",
+    "mlp-mixer-b32-sam_notop.h5": "94d8ac0ae1276387ed7959dae0178472",
+    "mlp-mixer-l16.h5": "5d98d7b68fa571fdd577ecd159f8d285",
+    "mlp-mixer-l16_notop.h5": "95d4a7bda98e3c0ee5eb0fdc4a078d86",
+}
+
 POSSIBLE_WEIGHT_VARIANTS = {
     "b16": ["imagenet", "sam"],
     "b32": ["sam"],
@@ -182,7 +197,25 @@ def MLPMixer(
     model = tf.keras.Model(inputs=[inputs], outputs=[x], name=name)
 
     # Load weights.
-    # TODO: add logic for weights download.
+    if weights in ["imagenet", "sam"]:
+        weights_filename = name
+        if weights == "sam":
+            weights_filename += "-sam"
+        if not include_top:
+            weights_filename += "_notop"
+
+        weights_filename += ".h5"
+        file_hash = WEIGHTS_HASHES[weights_filename]
+        path = tf.keras.utils.get_file(
+            fname=weights_filename,
+            origin=WEIGHTS_BASE_URL + weights_filename,
+            cache_subdir="models",
+            file_hash=file_hash,
+        )
+        model.load_weights(path)
+
+    elif weights is not None:
+        model.load_weights(weights)
 
     return model
 
