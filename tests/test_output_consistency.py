@@ -33,7 +33,7 @@ CONSISTENCY_TEST_PARAMS = [
         "model_fn": MLPMixer_B32,
         "weights_path": os.path.join(WEIGHTS_DIR, "mlp-mixer-b32-sam.h5"),
         "original_outputs": os.path.join(
-            ROOT_DIR, "assets/original_outputs/b16_sam.npy"
+            ROOT_DIR, "assets/original_outputs/b32_sam.npy"
         ),
     },
     {
@@ -66,10 +66,9 @@ class TestKerasVSOriginalOutputConsistency(parameterized.TestCase):
         input_tensor = self._pre_process_image(input_tensor)
 
         output = model(input_tensor, training=False)
-
         original_output = np.load(original_outputs)
 
-        np.testing.assert_allclose(output, original_output, rtol=1e-3, atol=1e-3)
+        tf.debugging.assert_near(output, original_output)
 
     @staticmethod
     def _pre_process_image(img: tf.Tensor) -> tf.Tensor:
