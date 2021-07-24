@@ -13,6 +13,7 @@ CONSISTENCY_TEST_PARAMS = [
     {
         "testcase_name": "b16-imagenet1k",
         "model_fn": MLPMixer_B16,
+        "weights_arg": "imagenet",
         "original_outputs": os.path.join(
             ROOT_DIR, "assets/original_outputs/b16_imagenet1k.npy"
         ),
@@ -20,6 +21,7 @@ CONSISTENCY_TEST_PARAMS = [
     {
         "testcase_name": "b16-sam",
         "model_fn": MLPMixer_B16,
+        "weights_arg": "sam",
         "original_outputs": os.path.join(
             ROOT_DIR, "assets/original_outputs/b16_sam.npy"
         ),
@@ -27,6 +29,7 @@ CONSISTENCY_TEST_PARAMS = [
     {
         "testcase_name": "b32-sam",
         "model_fn": MLPMixer_B32,
+        "weights_arg": "sam",
         "original_outputs": os.path.join(
             ROOT_DIR, "assets/original_outputs/b32_sam.npy"
         ),
@@ -34,6 +37,7 @@ CONSISTENCY_TEST_PARAMS = [
     {
         "testcase_name": "l16-imagenet1k",
         "model_fn": MLPMixer_L16,
+        "weights_arg": "imagenet",
         "original_outputs": os.path.join(
             ROOT_DIR, "assets/original_outputs/l16_imagenet1k.npy"
         ),
@@ -47,8 +51,10 @@ class TestKerasVSOriginalOutputConsistency(parameterized.TestCase):
     image = tf.expand_dims(image, axis=0)
 
     @parameterized.named_parameters(CONSISTENCY_TEST_PARAMS)
-    def test_output_consistency(self, model_fn: Callable, original_outputs: str):
-        model = model_fn()
+    def test_output_consistency(
+        self, model_fn: Callable, weights_arg: str, original_outputs: str
+    ):
+        model = model_fn(weights=weights_arg)
 
         input_tensor = tf.image.resize(self.image, INPUT_SHAPE[:2])
         input_tensor = self._pre_process_image(input_tensor)
