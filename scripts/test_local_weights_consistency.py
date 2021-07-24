@@ -60,7 +60,7 @@ LOCAL_FEATURE_EXTRACTION_TEST_PARAMS = [
         "weights_path": os.path.join(WEIGHTS_DIR, "mlp-mixer-b16-sam_notop.h5"),
     },
     {
-        "testcase_name": "b32-sam",
+        "testcase_name": "b32-sam-fe",
         "model_fn": MLPMixer_B32,
         "weights_path": os.path.join(WEIGHTS_DIR, "mlp-mixer-b32-sam_notop.h5"),
     },

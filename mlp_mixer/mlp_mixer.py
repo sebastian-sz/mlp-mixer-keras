@@ -13,14 +13,14 @@ WEIGHTS_BASE_URL = (
 )
 
 WEIGHTS_HASHES = {
-    "mlp-mixer-b16.h5": "31670c261142ac63e160bcea14ad3929",
-    "mlp-mixer-b16_notop.h5": "b9de771862215884b0dc2a82757cac33",
-    "mlp-mixer-b16-sam.h5": "b9317283349bc699ca4f10db35a88df9",
-    "mlp-mixer-b16-sam_notop.h5": "73b16b7d1f77ff463717654973f0de9b",
-    "mlp-mixer-b32-sam.h5": "becfc6540f05833c3b01c19576d1c760",
-    "mlp-mixer-b32-sam_notop.h5": "94d8ac0ae1276387ed7959dae0178472",
-    "mlp-mixer-l16.h5": "5d98d7b68fa571fdd577ecd159f8d285",
-    "mlp-mixer-l16_notop.h5": "95d4a7bda98e3c0ee5eb0fdc4a078d86",
+    "mlp-mixer-b16.h5": "ab8a3dfeff735a68434e9b34abab5c15",
+    "mlp-mixer-b16_notop.h5": "6f307d2422024c37d29dec86ee517d38",
+    "mlp-mixer-b16-sam.h5": "7aa5fab09e09c7aba9aa723905c9b899",
+    "mlp-mixer-b16-sam_notop.h5": "9536272c70e5533bed35357caa168b80",
+    "mlp-mixer-b32-sam.h5": "42dbe013c11651a918141125efa7acd2",
+    "mlp-mixer-b32-sam_notop.h5": "965e051d877fd4bdec4ecadb1793a5fa",
+    "mlp-mixer-l16.h5": "77c742a53bd3f4f6e0dbb537ed44acaa",
+    "mlp-mixer-l16_notop.h5": "af70315ec1a2ea2aa3f12c93390eb745",
 }
 
 POSSIBLE_WEIGHT_VARIANTS = {
