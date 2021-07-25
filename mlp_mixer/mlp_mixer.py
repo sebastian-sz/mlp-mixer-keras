@@ -45,6 +45,8 @@ def _validate_input_shape(
                 "When passing weights `imagenet` or `sam` input shape must be"
                 f"equal to default input shape: {default_shape} or `None`."
             )
+        else:
+            return default_shape
     else:
         if len(input_shape) != 3:
             raise ValueError("Input shape must be tuple of 3 integer.")
